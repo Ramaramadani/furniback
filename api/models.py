@@ -12,7 +12,6 @@ class Product(models.Model):
     gambar = models.ImageField(upload_to='products/')
     stok = models.IntegerField(default=0)  # Tambahan field stok
 
-
 class Order(models.Model):
     produk = models.ForeignKey(Product, on_delete=models.CASCADE)
     waktu_pembelian = models.DateTimeField(auto_now_add=True)
