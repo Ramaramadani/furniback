@@ -10,7 +10,10 @@ class Product(models.Model):
     nama_produk = models.CharField(max_length=100)
     harga = models.DecimalField(max_digits=10, decimal_places=2)
     gambar = models.ImageField(upload_to='products/')
-    stok = models.IntegerField(default=0)  # Tambahan field stok
+    stok = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.nama_produk
 
 class Order(models.Model):
     produk = models.ForeignKey(Product, on_delete=models.CASCADE)

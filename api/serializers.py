@@ -11,7 +11,11 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
 
-from .models import Product, Discount
+    # Validasi untuk gambar produk (jika gambar tidak diupload)
+    def validate_gambar(self, value):
+        if not value:
+            raise serializers.ValidationError("Gambar produk diperlukan.")
+        return value
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,7 +31,7 @@ class OrderSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         produk = validated_data['produk']
 
-        # Kurangi stok
+        # Mengurangi stok produk
         if produk.stok > 0:
             produk.stok -= 1
             produk.save()
@@ -38,7 +42,7 @@ class OrderSerializer(serializers.ModelSerializer):
                     nama_produk=produk.nama_produk,
                     harga=produk.harga,
                     gambar=produk.gambar,  # Gambar tetap dipakai
-                    harga_diskon=produk.harga * 0.8  # contoh: diskon 20%
+                    harga_diskon=produk.harga * 0.8  # Misalnya: diskon 20%
                 )
         else:
             raise serializers.ValidationError("Stok produk habis.")
@@ -48,7 +52,6 @@ class OrderSerializer(serializers.ModelSerializer):
         validated_data['harga'] = produk.harga
 
         return super().create(validated_data)
-
 
 class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
